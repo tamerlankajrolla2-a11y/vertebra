@@ -13,7 +13,9 @@
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=Oswald:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Oswald:wght@600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Oswald:wght@600&display=swap"></noscript>
+<link rel="preconnect" href="https://vertebra-api.tamerlankajrolla2.workers.dev" crossorigin>
 <style>
 :root{
   --navy:#023a57; --navy2:#01283d; --blue:#2c7cab; --blue2:#1d6893; --sky:#e7f1f7; --bg:#f5f8fa; --gold:#f2b84b;
@@ -251,14 +253,14 @@ footer a{color:#cfe3ee}
 }
 @media(max-width:380px){.brand b{font-size:19px}.brand img{width:38px;height:38px}.hdr .in{gap:8px}}
 </style>
-<link rel="stylesheet" href="premium.css?v=1">
-<script src="premium.js?v=1" defer></script>
+<link rel="stylesheet" href="premium.css?v=2">
+<script src="premium.js?v=2" defer></script>
 </head>
 <body>
 
 <header class="hdr" id="hdr"><div class="wrap in">
   <a class="brand" href="#top" aria-label="Vertebra Medical — на главную">
-    <img src="img/emblem.png" alt="" width="44" height="44">
+    <img src="img/emblem-88.webp" alt="" width="44" height="44" decoding="async">
     <span><b>VERTEBRA</b><small>MEDICAL</small></span>
   </a>
   <nav class="nav">
@@ -292,7 +294,7 @@ footer a{color:#cfe3ee}
       <div class="chips"><span class="chip">🩻 Приходите со снимками МРТ, КТ</span><span class="chip" id="hHours">🕘 Ежедневно 9:00–20:00</span></div>
     </div>
     <div class="hero-art">
-      <img src="img/logo-white.png" alt="Vertebra Medical" width="640" height="717">
+      <picture><source srcset="img/logo-white-380.webp" type="image/webp"><img src="img/logo-white.png" alt="Vertebra Medical" width="380" height="424" fetchpriority="high" decoding="async"></picture>
       <div class="cap" id="hTag">Центр лечения позвоночника и суставов</div>
     </div>
   </div>
@@ -414,7 +416,7 @@ footer a{color:#cfe3ee}
 </main>
 
 <footer><div class="wrap">
-  <div class="fl"><img src="img/logo-white.png" alt="Vertebra Medical" width="120" height="134"></div>
+  <div class="fl"><img src="img/logo-white-240.webp" alt="Vertebra Medical" width="120" height="134" loading="lazy" decoding="async"></div>
   <p><b>Vertebra Medical.</b> <span id="fTag">Центр лечения позвоночника и суставов</span>, <span id="fAddr">Петропавловск</span>. Имеются противопоказания, необходима консультация специалиста. Материалы сайта не заменяют очный приём врача.</p>
   <p style="margin-top:10px" id="fCredit"></p>
 </div></footer>
@@ -423,7 +425,7 @@ footer a{color:#cfe3ee}
 
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shT"><div class="p" id="shBody"></div></div>
 
-<script src="js/store.js?v=2"></script>
+<script src="js/store.js?v=3"></script>
 <script>
 (function () {
 'use strict';
@@ -586,7 +588,8 @@ function reveal() {
   els.forEach(function (x) { io.observe(x); });
 }
 
-Store.load().then(function (d) { D = d; render(); }).catch(function () { document.querySelectorAll('.reveal').forEach(function (x) { x.classList.add('in'); }); });
+reveal();
+Store.loadFast(function (d) { D = d; render(); });
 })();
 </script>
 </body>

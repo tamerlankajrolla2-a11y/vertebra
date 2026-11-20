@@ -84,6 +84,21 @@ window.Store = (function () {
       return local && local.settings ? normalize(local) : fromFile().then(normalize);
     }).then(function (d) { cache = d; return d; });
   }
+  /* Быстрая загрузка для публичного сайта: сначала сразу показываем сохранённую копию
+     или data/site.json (свой домен, быстро), потом тихо обновляем с сервера (таймаут 4 с). */
+  function loadFast(cb) {
+    var shown = false, sig = '';
+    function show(d) { var s = JSON.stringify(d); if (shown && s === sig) return; shown = true; sig = s; cb(d); }
+    var local = ls(LS_DATA);
+    if (local && local.settings) show(normalize(local));
+    else fromFile().then(function (d) { if (!shown) show(normalize(d)); }).catch(function () {});
+    var ctl = window.AbortController ? new AbortController() : null, tm = setTimeout(function () { if (ctl) ctl.abort(); }, 4000);
+    fetch(API + '/menu?site=' + SITE, { cache: 'no-store', signal: ctl ? ctl.signal : undefined })
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (r) { var d = r && r.data; if (d && d.settings) { ls(LS_DATA, d); cache = normalize(d); show(cache); } })
+      .catch(function () { if (!shown) fromFile().then(function (d) { show(normalize(d)); }).catch(function () {}); })
+      .then(function () { clearTimeout(tm); });
+  }
   function save(d) {
     cache = normalize(d);
     return req('/menu', { method: 'PUT', auth: true, body: JSON.stringify(cache) }).then(function () { ls(LS_DATA, cache); return true; });
@@ -106,7 +121,7 @@ window.Store = (function () {
   function changePassword(pw) { return req('/password', { method: 'POST', auth: true, body: { password: pw } }); }
 
   return {
-    load: load, save: save, reset: reset, fromFile: fromFile, normalize: normalize,
+    load: load, loadFast: loadFast, save: save, reset: reset, fromFile: fromFile, normalize: normalize,
     createOrder: createOrder, listOrders: listOrders, setStatus: setStatus, tgInfo: tgInfo, tgLink: tgLink, tgOff: tgOff,
     login: login, logout: logout, authed: authed, changePassword: changePassword,
     api: API, site: SITE
